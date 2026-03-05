@@ -5,7 +5,7 @@ module.exports.createItem = (req, res) => {
   const owner = req.user._id;
 
   ClothingItem.create({ name, weather, imageUrl, owner })
-    .then((item) => res.send( item))
+    .then((item) => res.send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
@@ -46,7 +46,10 @@ module.exports.deleteItem = (req, res) => {
       if (err.statusCode === 404) {
         return res.status(404).send({ message: "Item not found" });
       }
-      res.status(500).send({ message: "An error has occurred on the server" });
+
+      return res
+        .status(500)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -70,7 +73,9 @@ module.exports.likeItem = (req, res) => {
       if (err.statusCode === 404) {
         return res.status(404).send({ message: "Item not found" });
       }
-      res.status(500).send({ message: "An error has occurred on the server" });
+      return res
+        .status(500)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -94,6 +99,8 @@ module.exports.dislikeItem = (req, res) => {
       if (err.statusCode === 404) {
         return res.status(404).send({ message: "Item not found" });
       }
-      res.status(500).send({ message: "An error has occurred on the server" });
+      return res
+        .status(500)
+        .send({ message: "An error has occurred on the server" });
     });
 };
