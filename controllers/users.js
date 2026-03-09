@@ -1,6 +1,7 @@
-const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
+const User = require("../models/user");
 const {
   BAD_REQUEST,
   UNAUTHORIZED,
@@ -13,13 +14,11 @@ const { JWT_SECRET = "dev-secret" } = process.env;
 
 // GET /users
 const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => {
-      res.status(200).send(users);
-    })
+ User.find({})
+    .then((users) => res.status(200).send(users))
     .catch((err) => {
       console.error(err);
-      res
+      return res
         .status(INTERNAL_SERVER_ERROR)
         .send({ message: "An error has occurred on the server" });
     });
@@ -36,18 +35,18 @@ const createUser = (req, res) => {
 
   return bcrypt
     .hash(password, 10)
-    .then((hash) => {
-      return User.create({
+    .then((hash) =>
+      User.create({
         name,
         avatar,
         email,
         password: hash,
-      });
-    })
+      })
+    )
     .then((user) => {
       const userWithoutPassword = user.toObject();
       delete userWithoutPassword.password;
-      res.status(201).send(userWithoutPassword);
+      return res.status(201).send(userWithoutPassword);
     })
     .catch((err) => {
       console.error(err);
@@ -67,7 +66,7 @@ const createUser = (req, res) => {
 
 const getCurrentUser = (req, res) => {
   const { _id } = req.user;
-  User.findById(_id)
+ return User.findById(_id)
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
@@ -94,13 +93,13 @@ const login = (req, res) => {
       .send({ message: "Invalid data passed to createUser" });
   }
 
-  User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
 
-      res.status(200).send({ token });
+      return res.status(200).send({ token });
     })
     .catch((err) => {
       if (err.message === "Incorrect email or password") {
@@ -119,7 +118,7 @@ const updateProfile = (req, res) => {
   const { name, avatar } = req.body;
   const { _id } = req.user;
 
-  User.findByIdAndUpdate(
+ return User.findByIdAndUpdate(
     _id,
     { name, avatar },
     {
@@ -128,9 +127,7 @@ const updateProfile = (req, res) => {
     }
   )
     .orFail()
-    .then((user) => {
-      res.status(200).send(user);
-    })
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
