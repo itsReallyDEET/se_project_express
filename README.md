@@ -16,3 +16,7 @@ Before committing your code, make sure you edit the file `sprint.txt` in the roo
 
 Check out this video (https://www.loom.com/share/520eaaea61e64b56bd4659e1746a8aa4), where I describe my
 project and some challenges I faced while building it.
+
+## GitHub Pages
+
+Click here (https://github.com/itsReallyDEET/se_project_express.git) to access GitHub Pages.
