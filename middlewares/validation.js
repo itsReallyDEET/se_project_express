@@ -1,9 +1,5 @@
 const { Joi, celebrate } = require("celebrate");
 const validator = require("validator");
-const {
-  validateUserBody,
-  validateLoginBody,
-} = require("../middlewares/validation");
 
 const validateURL = (value, helpers) => {
   if (validator.isURL(value)) {
@@ -22,14 +18,14 @@ module.exports.validateCardBody = celebrate({
 
     imageUrl: Joi.string().required().custom(validateURL).messages({
       "string.empty": 'The "imageUrl" field must be filled in',
-      "string.uri": 'the "imageUrl" field must be a valid url',
+      "string.uri": 'The "imageUrl" field must be a valid url',
     }),
   }),
 });
 
 module.exports.validateUserBody = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).messages({
+    name: Joi.string().required().min(2).max(30).messages({
       "string.min": 'The minimum length of the "name" field is 2',
       "string.max": 'The maximum length of the "name" field is 30',
       "string.empty": 'The "name" field must be filled in',
@@ -50,7 +46,7 @@ module.exports.validateUserBody = celebrate({
   }),
 });
 
-module.exports.validateLoginBody = celebrate({
+module.exports.validateAuthentication = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email().messages({
       "string.empty": 'The "email" field must be filled in',
@@ -64,8 +60,13 @@ module.exports.validateLoginBody = celebrate({
   }),
 });
 
+module.exports.validateLoginBody = module.exports.validateAuthentication;
+
 module.exports.validateId = celebrate({
   params: Joi.object().keys({
-    itemId: Joi.string().hex().length(24),
+    itemId: Joi.string().alphanum().hex().length(24).messages({
+      "string.hex": "Invalid ID",
+      "string.length": "Invalid ID",
+    }),
   }),
 });

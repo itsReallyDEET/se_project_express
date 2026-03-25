@@ -7,10 +7,10 @@ const auth = require("../middlewares/auth");
 const { NotFoundError } = require("../utils/error");
 const {
   validateUserBody,
-  validateLoginBody,
+  validateAuthentication,
 } = require("../middlewares/validation");
 
-router.post("/signin", validateLoginBody, login);
+router.post("/signin", validateAuthentication, login);
 router.post("/signup", validateUserBody, createUser);
 router.get("/items", getItems);
 
