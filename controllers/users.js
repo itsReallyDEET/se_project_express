@@ -8,7 +8,7 @@ const {
   NotFoundError,
   ConflictError,
   UnauthorizedError,
-} = require("../utils/error");
+} = require("../errors/error");
 
 // GET /users
 const getUsers = (req, res, next) => {

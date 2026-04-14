@@ -4,7 +4,7 @@ const clothingItemRouter = require("./clothingItems");
 const { login, createUser } = require("../controllers/users");
 const { getItems } = require("../controllers/clothingItems");
 const auth = require("../middlewares/auth");
-const { NotFoundError } = require("../utils/error");
+const { NotFoundError } = require("../errors/error");
 const {
   validateUserBody,
   validateAuthentication,
